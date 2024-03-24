@@ -6,8 +6,8 @@ from sqlalchemy.orm import DeclarativeBase
 from config import DATABASE_URL
 
 engine = create_async_engine(
-    url = DATABASE_URL,
-    echo = True
+    url=DATABASE_URL,
+    # echo=True
 )
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
