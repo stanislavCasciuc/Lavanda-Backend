@@ -6,6 +6,8 @@ from sqlalchemy import pool
 from alembic import context
 from database import Base
 from models import User
+from products.models import ProductOrm
+from review.models import ReviewOrm
 
 from config import DATABASE_URL
 
