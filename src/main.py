@@ -6,10 +6,10 @@ from auth.router import fastapi_users, auth_backend
 from auth.schemas import UserRead, UserCreate, UserUpdate
 from database import engine
 from models import User
-from products.models import ProductOrm
+from products.models import ProductOrm, CategoryOrm
 from auth.config import SECRET_KEY
 from products.router import router as products_router
-from review.router import router as review_router
+from reviews.router import router as review_router
 
 authentication_backend = AdminAuth(secret_key=SECRET_KEY)
 
@@ -69,12 +69,21 @@ class ProductAdmin(ModelView, model=ProductOrm):
     can_delete = True
     can_view_details = True
 
+class CategoryAdmin(ModelView, model=CategoryOrm):
+    column_list = [CategoryOrm.id, CategoryOrm.name]
+    form_excluded_columns = [CategoryOrm.products]
+    can_create = True
+    can_edit = True
+    can_delete = True
+    can_view_details = True
+
 
 
 
 #ADMIN
 admin.add_view(UserAdmin)
 admin.add_view(ProductAdmin)
+admin.add_view(CategoryAdmin)
 #END ADMIN
 
 

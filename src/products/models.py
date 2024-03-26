@@ -1,22 +1,26 @@
 import enum
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 from fastapi_storages import FileSystemStorage
 from fastapi_storages.integrations.sqlalchemy import FileType
-from sqlalchemy import text, Column
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import text, Column, ForeignKey, Integer
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from database import Base
 
-img_storage = FileSystemStorage(path=r"static\images")
+product_img_storage = FileSystemStorage(path=r"src\static\images\products")
+category_img_storage = FileSystemStorage(path=r"src\static\images\categories")
 
-class Category(enum.Enum):
-    uleiuri_esentiale = "Uleiuri Esentiale"
-    sapunuri = "Sapunuri"
-    creme = "Creme"
-    parfumuri = "Parfumuri"
 
+class CategoryOrm(Base):
+    __tablename__ = "category"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(nullable=False, unique=True)
+    image = Column(FileType(storage=category_img_storage))
+
+    products: Mapped[List["ProductOrm"]] = relationship()
 
 class ProductOrm(Base):
     __tablename__ = "product"
@@ -24,8 +28,8 @@ class ProductOrm(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
     description: Mapped[str]
-    image = Column(FileType(storage=img_storage))
-    category: Mapped[Category]
+    image = Column(FileType(storage=product_img_storage))
+    category_id = Column(Integer, ForeignKey("category.id", ondelete='SET NULL'))
     price: Mapped[float]
     stock: Mapped[int]
     created_at: Mapped[datetime | None] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
@@ -35,4 +39,6 @@ class ProductOrm(Base):
     )
     rating: Mapped[Optional[float]] = mapped_column(server_default=text("0"))
     rating_count: Mapped[Optional[int]] = mapped_column(server_default=text("0"))
+
+    category: Mapped["CategoryOrm"] = relationship()
 

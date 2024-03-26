@@ -1,21 +1,24 @@
+from datetime import datetime
+
 from pydantic import BaseModel, Field
 from starlette.responses import FileResponse
 
-from products.models import Category
 
 
 
+class GetCategorySchema(BaseModel):
+    name: str
+    id: int
 
-
-class Product(BaseModel):
+class GetProductSchema(BaseModel):
     name: str
     description: str
-    image: FileResponse
-    category: Category
+    image: str
+    category: GetCategorySchema
     price: float = Field(gt=0)
     stock: int = Field(ge=0)
-    created_at: str
-    updated_at: str
+    created_at: datetime
+    updated_at: datetime
 
 class UserRead(BaseModel):
     full_name: str

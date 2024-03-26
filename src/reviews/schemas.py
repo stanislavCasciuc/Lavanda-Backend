@@ -1,18 +1,18 @@
 from pydantic import BaseModel, Field
 
 
-class ReviewUser(BaseModel):
-    username: str
+class ReviewUserSchema(BaseModel):
+    full_name: str
     email: str
 
 
-class PostReview(BaseModel):
+class PostReviewSchema(BaseModel):
     product_id: int
     name: str
     comment: str
     rating: int = Field(..., ge=1, le=5)
 
-class Review(PostReview):
+class GetReviewSchema(PostReviewSchema):
     id: int
     product_id: int
-    username: ReviewUser
+    user: ReviewUserSchema
