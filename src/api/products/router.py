@@ -3,12 +3,12 @@ from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload, selectinload
+from sqlalchemy.orm import selectinload
 from starlette.responses import FileResponse
 
 from database import get_async_session
-from products.models import ProductOrm
-from products.schemas import GetProductSchema
+from api.products.models import ProductOrm
+from api.products.schemas import GetProductSchema
 
 router = APIRouter()
 

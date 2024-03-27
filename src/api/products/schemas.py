@@ -1,16 +1,15 @@
 from datetime import datetime
 
 from pydantic import BaseModel, Field
-from starlette.responses import FileResponse
-
-
 
 
 class GetCategorySchema(BaseModel):
     name: str
     id: int
 
+
 class GetProductSchema(BaseModel):
+    id: int
     name: str
     description: str
     image: str
@@ -19,6 +18,7 @@ class GetProductSchema(BaseModel):
     stock: int = Field(ge=0)
     created_at: datetime
     updated_at: datetime
+
 
 class UserRead(BaseModel):
     full_name: str

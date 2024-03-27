@@ -22,6 +22,10 @@ class CategoryOrm(Base):
 
     products: Mapped[List["ProductOrm"]] = relationship()
 
+    def __str__(self):
+        return f"{self.name}"
+
+
 class ProductOrm(Base):
     __tablename__ = "product"
 
@@ -29,16 +33,19 @@ class ProductOrm(Base):
     name: Mapped[str]
     description: Mapped[str]
     image = Column(FileType(storage=product_img_storage))
-    category_id = Column(Integer, ForeignKey("category.id", ondelete='SET NULL'))
+    category_id = Column(Integer, ForeignKey("category.id", ondelete="SET NULL"))
     price: Mapped[float]
     stock: Mapped[int]
-    created_at: Mapped[datetime | None] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
+    created_at: Mapped[datetime | None] = mapped_column(
+        server_default=text("TIMEZONE('utc', now())")
+    )
     updated_at: Mapped[datetime | None] = mapped_column(
-        server_default=text("TIMEZONE('utc', now())"),
-        onupdate=datetime.now
+        server_default=text("TIMEZONE('utc', now())"), onupdate=datetime.now
     )
     rating: Mapped[Optional[float]] = mapped_column(server_default=text("0"))
     rating_count: Mapped[Optional[int]] = mapped_column(server_default=text("0"))
 
     category: Mapped["CategoryOrm"] = relationship()
 
+    def __str__(self):
+        return f"{self.name}"

@@ -12,7 +12,7 @@ import fastapi_users_db_sqlalchemy
 from alembic import op
 import sqlalchemy as sa
 
-from products.models import category_img_storage, product_img_storage
+from api.products.models import category_img_storage, product_img_storage
 
 # revision identifiers, used by Alembic.
 revision: str = '783ff2dbcb64'

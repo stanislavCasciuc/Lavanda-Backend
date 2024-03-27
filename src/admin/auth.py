@@ -5,19 +5,21 @@ from fastapi import Depends
 from sqladmin.authentication import AuthenticationBackend
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.requests import Request
+from starlette.responses import RedirectResponse
 
 from admin.util import authenticate_user, create_access_token, get_current_user
 from database import get_async_session
 
 
 class AdminAuth(AuthenticationBackend):
-    async def login(self, request: Request, session: AsyncSession = Depends(get_async_session)) -> bool:
+    async def login(
+        self, request: Request, session: AsyncSession = Depends(get_async_session)
+    ) -> bool:
         form = await request.form()
         email, password = form["username"], form["password"]
         user = await authenticate_user(email, password)
         if not user:
-            raise HTTPException(status_code=401, detail="Incorrect email or password",
-                                headers={"WWW-Authenticate": "Bearer"})
+            return RedirectResponse(url="/admin/login")
         access_token_expires = timedelta(seconds=3600)
         access_token = create_access_token(
             data={"sub": user.email}, expires_delta=access_token_expires
@@ -36,7 +38,7 @@ class AdminAuth(AuthenticationBackend):
         token = request.session.get("token")
 
         if not token:
-            return False
+            return RedirectResponse(url="/admin/login")
 
         user = await get_current_user(token)
         if not user:

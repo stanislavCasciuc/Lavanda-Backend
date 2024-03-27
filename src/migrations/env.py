@@ -9,9 +9,6 @@ from alembic import context
 
 from config import DATABASE_URL
 from database import Base
-from models import User
-from products.models import ProductOrm, CategoryOrm
-from reviews.models import ReviewOrm
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
