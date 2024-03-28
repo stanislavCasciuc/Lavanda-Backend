@@ -12,6 +12,7 @@ from api.products.schemas import GetProductSchema
 
 router = APIRouter()
 
+
 @router.get("/products", response_model=List[GetProductSchema])
 async def create_product(session: AsyncSession = Depends(get_async_session)):
     stmt = select(ProductOrm).options(selectinload(ProductOrm.category))

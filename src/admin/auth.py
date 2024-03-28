@@ -1,5 +1,4 @@
 from datetime import timedelta
-from http.client import HTTPException
 
 from fastapi import Depends
 from sqladmin.authentication import AuthenticationBackend

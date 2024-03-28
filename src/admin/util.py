@@ -19,14 +19,18 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
+
 def get_password_hash(password):
     return pwd_context.hash(password)
+
 
 async def get_user(email: str):
     async with async_session_maker() as session:
         stmt = select(User).where(User.email == email)
         result = await session.execute(stmt)
         return result.scalars().first()
+
+
 async def authenticate_user(email: str, password: str):
     user = await get_user(email)
     if not user:
@@ -34,6 +38,7 @@ async def authenticate_user(email: str, password: str):
     if not verify_password(password, user.hashed_password):
         return False
     return user
+
 
 def create_access_token(data: dict, expires_delta: timedelta or None):
     to_encode = data.copy()
@@ -45,6 +50,7 @@ def create_access_token(data: dict, expires_delta: timedelta or None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
@@ -63,6 +69,3 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     if user is None:
         raise credentials_exception
     return user
-
-
-

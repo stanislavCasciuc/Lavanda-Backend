@@ -1,7 +1,4 @@
-
 from typing import AsyncGenerator
-
-
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
@@ -18,6 +15,7 @@ class Base(DeclarativeBase):
 
     repr_cols_count = 3
     repr_cols = tuple()
+
     def __repr__(self):
         cols = []
         for idx, col in enumerate(self.__table__.columns.keys()):
@@ -25,6 +23,7 @@ class Base(DeclarativeBase):
                 cols.append(f"{col}={getattr(self, col)}")
 
         return f"{self.__class__.__name__}({', '.join(cols)})"
+
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_maker() as session:

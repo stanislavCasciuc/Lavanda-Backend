@@ -1,5 +1,3 @@
-from turtle import update
-
 from sqlalchemy import select, insert, update
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import selectinload

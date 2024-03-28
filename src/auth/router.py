@@ -11,7 +11,6 @@ from fastapi_users.authentication import (
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 
 from auth.config import SECRET_KEY
-
 from auth.utils import get_user_db
 from models import User
 

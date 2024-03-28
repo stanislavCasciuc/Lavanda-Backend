@@ -2,11 +2,10 @@ from fastapi import FastAPI
 from sqladmin import Admin
 
 from admin.auth import AdminAuth
-from admin.model_views import UserAdmin, ProductAdmin, CategoryAdmin
+from admin.model_views import UserAdmin, ProductAdmin, CategoryAdmin, ReviewAdmin
 from auth.router import fastapi_users, auth_backend
 from auth.schemas import UserRead, UserCreate, UserUpdate
 from database import engine
-
 from auth.config import SECRET_KEY
 from api.products.router import router as products_router
 from api.reviews.router import router as review_router
@@ -17,7 +16,7 @@ app = FastAPI()
 admin = Admin(app=app, engine=engine, authentication_backend=authentication_backend)
 
 
-#AUTH ROUTES
+# AUTH ROUTES
 app.include_router(
     fastapi_users.get_auth_router(auth_backend), prefix="/auth/jwt", tags=["auth"]
 )
@@ -41,31 +40,17 @@ app.include_router(
     prefix="/users",
     tags=["users"],
 )
-#END AUTH ROUTES
+# END AUTH ROUTES
 
-#ROUTES
-app.include_router(
-    products_router,
-    prefix="/api",
-    tags=["products"]
-)
-app.include_router(
-    review_router,
-    prefix="/api",
-    tags=["reviews"]
-)
-#END ROUTES
+# ROUTES
+app.include_router(products_router, prefix="/api", tags=["products"])
+app.include_router(review_router, prefix="/api", tags=["reviews"])
+# END ROUTES
 
 
-
-
-
-#ADMIN
+# ADMIN
 admin.add_view(UserAdmin)
 admin.add_view(ProductAdmin)
 admin.add_view(CategoryAdmin)
-#END ADMIN
-
-
-
-
+admin.add_view(ReviewAdmin)
+# END ADMIN

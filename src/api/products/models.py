@@ -1,16 +1,13 @@
-import enum
 from datetime import datetime
 from typing import Optional, List
 
-from fastapi_storages import FileSystemStorage
+
 from fastapi_storages.integrations.sqlalchemy import FileType
 from sqlalchemy import text, Column, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from config import category_img_storage, product_img_storage
 from database import Base
-
-product_img_storage = FileSystemStorage(path=r"src\static\images\products")
-category_img_storage = FileSystemStorage(path=r"src\static\images\categories")
 
 
 class CategoryOrm(Base):
@@ -42,7 +39,7 @@ class ProductOrm(Base):
     updated_at: Mapped[datetime | None] = mapped_column(
         server_default=text("TIMEZONE('utc', now())"), onupdate=datetime.now
     )
-    rating: Mapped[Optional[float]] = mapped_column(server_default=text("0"))
+    rating: Mapped[Optional[int]] = mapped_column(server_default=text("0"))
     rating_count: Mapped[Optional[int]] = mapped_column(server_default=text("0"))
 
     category: Mapped["CategoryOrm"] = relationship()
