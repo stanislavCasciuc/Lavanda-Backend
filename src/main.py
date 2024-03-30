@@ -7,8 +7,8 @@ from auth.router import fastapi_users, auth_backend
 from auth.schemas import UserRead, UserCreate, UserUpdate
 from database import engine
 from auth.config import SECRET_KEY
-from api.products.router import router as products_router
-from api.reviews.router import router as review_router
+from api.products import router as products_router
+from api.reviews import router as review_router
 
 authentication_backend = AdminAuth(secret_key=SECRET_KEY)
 

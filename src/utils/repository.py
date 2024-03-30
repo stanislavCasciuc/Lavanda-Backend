@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from sqlalchemy import insert, select, update
-
-from database import async_session_maker
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class AbstractRepository(ABC):
@@ -14,34 +13,37 @@ class AbstractRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def update_one_by_id():
+    async def update_one():
         raise NotImplementedError
 
 
 class SQLAlchemyRepository(AbstractRepository):
     model = None
 
+    def __init__(self, session: AsyncSession):
+        self.session = session
+
     async def add_one(self, data: dict) -> int:
-        async with async_session_maker() as session:
-            stmt = insert(self.model).values(**data).returning(self.model.id)
-            result = await session.execute(stmt)
-            await session.commit()
-            return result.scalar_one()
+        stmt = insert(self.model).values(**data).returning(self.model.id)
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
 
     async def find_all(self):
-        async with async_session_maker() as session:
-            stmt = select(self.model)
-            result = await session.execute(stmt)
-            return result.scalars().all()
+        stmt = select(self.model)
+        result = await self.session.execute(stmt)
+        return result.scalars().all()
 
-    async def update_one_by_id(self, data: dict, id: int) -> int:
-        async with async_session_maker() as session:
-            stmt = (
-                update(self.model)
-                .where(self.model.id == id)
-                .values(**data)
-                .returning(self.model.id)
-            )
-            result = await session.execute(stmt)
-            await session.commit()
-            return result.scalar_one()
+    async def find_one(self, **filter):
+        stmt = select(self.model).filter_by(**filter)
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
+
+    async def update_one(self, data: dict, id: int) -> int:
+        stmt = (
+            update(self.model)
+            .where(self.model.id == id)
+            .values(**data)
+            .returning(self.model.id)
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one()

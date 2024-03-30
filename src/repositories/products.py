@@ -1,4 +1,4 @@
-from api.products.models import ProductOrm
+from models.products import ProductOrm
 from utils.repository import SQLAlchemyRepository
 
 

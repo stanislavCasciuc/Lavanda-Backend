@@ -1,12 +1,18 @@
 from sqladmin import ModelView
 
-from api.reviews.models import ReviewOrm
-from models import User
-from api.products.models import ProductOrm, CategoryOrm
+from models.reviews import ReviewOrm
+from models.users import User
+from models.products import ProductOrm, CategoryOrm
 
 
 class UserAdmin(ModelView, model=User):
-    column_list = [User.id, User.full_name, User.email, User.is_superuser]
+
+    column_list = [
+        User.full_name,
+        User.email,
+        User.is_superuser,
+        User.id,
+    ]
     column_details_exclude_list = [User.id, User.hashed_password]
     can_create = True
     can_edit = False

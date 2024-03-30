@@ -11,7 +11,9 @@ class ProductsService:
         )
         return product_id
 
-    async def update_product_rating(self, product_id: int, product_data: dict) -> int:
+    async def update_product_rating(
+        self, uow, product_id: int, product_data: dict
+    ) -> int:
         product_id = await self.product_repository.update_one_by_id(
             id=product_id, data=product_data
         )

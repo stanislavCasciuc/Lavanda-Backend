@@ -9,7 +9,7 @@ from sqlalchemy import select
 
 from auth.config import SECRET_KEY, ALGORITHM
 from database import async_session_maker
-from models import User
+from models.users import User
 
 
 pwd_context = CryptContext(schemes=["argon2", "bcrypt"], deprecated="auto")
