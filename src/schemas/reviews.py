@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel, Field
 
 
@@ -12,7 +14,8 @@ class PostReviewSchema(BaseModel):
     comment: str
     rating: int = Field(..., ge=1, le=5)
 
+
 class GetReviewSchema(PostReviewSchema):
     id: int
-    product_id: int
     user: ReviewUserSchema
+    created_at: datetime

@@ -1,12 +1,8 @@
 from typing import List, Annotated
-
 from fastapi import APIRouter, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from auth.router import current_active_user
-from database import get_async_session
 from schemas.reviews import PostReviewSchema, GetReviewSchema
-from api.util import get_product_reviews_from_db
 
 from api.dependencies import UOWDep
 from schemas.users import UserRead
@@ -31,8 +27,9 @@ async def add_review(
 
 
 @router.get("/reviews/{product_id}", response_model=List[GetReviewSchema])
-async def get_product_reviews(
-    product_id: int, session: AsyncSession = Depends(get_async_session)
-):
-    response = await get_product_reviews_from_db(session, product_id)
+async def get_product_reviews(product_id: int, uow: UOWDep):
+    response = await ReviewsService().find_product_reviews(
+        product_id=product_id,
+        uow=uow,
+    )
     return response
