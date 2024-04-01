@@ -37,7 +37,8 @@ class UnitOfWork:
         self.products = ProductsRepository(self.session)
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        await self.rollback()
+        if exc_val:
+            await self.rollback()
         await self.session.close()
 
     async def commit(self):
