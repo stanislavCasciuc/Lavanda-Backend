@@ -10,6 +10,11 @@ from alembic import context
 from config import DATABASE_URL
 from database import Base
 
+from models.products import ProductOrm
+from models.reviews import ReviewOrm
+from models.users import User
+from models.products import CategoryOrm
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config

@@ -17,10 +17,10 @@ class CategoryOrm(Base):
     name: Mapped[str] = mapped_column(nullable=False, unique=True)
     image = Column(FileType(storage=category_img_storage))
 
-    products: Mapped[List["ProductOrm"]] = relationship()
+    products: Mapped[List["ProductOrm"]] = relationship(back_populates="category")
 
-    def __str__(self):
-        return f"{self.name}"
+    # def __str__(self):
+    #     return f"{self.name}"
 
 
 class ProductOrm(Base):
@@ -42,7 +42,7 @@ class ProductOrm(Base):
     rating: Mapped[Optional[int]] = mapped_column(server_default=text("0"))
     rating_count: Mapped[Optional[int]] = mapped_column(server_default=text("0"))
 
-    category: Mapped["CategoryOrm"] = relationship()
+    category: Mapped["CategoryOrm"] = relationship(back_populates="products")
 
-    def __str__(self):
-        return f"{self.name}"
+    # def __str__(self):
+    #     return f"{self.name}"

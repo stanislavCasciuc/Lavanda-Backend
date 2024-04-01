@@ -21,6 +21,9 @@ class GetProductSchema(BaseModel):
     rating: int
     rating_count: int
 
+    class Config:
+        from_attributes = True
+
 
 class UserRead(BaseModel):
     full_name: str

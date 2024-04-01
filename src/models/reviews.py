@@ -1,12 +1,10 @@
 from datetime import datetime
 from uuid import UUID
-
 from sqlalchemy import ForeignKey, text
-from sqlalchemy.orm import mapped_column, Mapped, relationship, class_mapper
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 from database import Base
 from models.users import User
-from schemas.reviews import GetReviewSchema
 
 
 class ReviewOrm(Base):

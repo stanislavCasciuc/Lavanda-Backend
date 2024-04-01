@@ -1,3 +1,5 @@
+from sqlalchemy.orm import selectinload
+
 from models.reviews import ReviewOrm
 from schemas.reviews import PostReviewSchema, GetReviewSchema
 from schemas.users import UserRead
@@ -26,15 +28,15 @@ class ReviewsService:
 
         return review_id
 
-    async def find_product_reviews(self, uow: IUnitOfWork, product_id: int):
+    async def find_product_reviews(self, uow: IUnitOfWork, product_id: int) -> list:
         async with uow:
             reviews = await uow.reviews.find_all(
-                select_related=[ReviewOrm.user],
-                product_id=product_id,
+                options=[selectinload(ReviewOrm.user)],
+                filter={"product_id": product_id},
                 order_by=ReviewOrm.created_at.desc(),
             )
             result = [
-                GetReviewSchema.model_validate(row, from_attributes=True)
-                for row in reviews
+                GetReviewSchema.model_validate(review, from_attributes=True)
+                for review in reviews
             ]
         return result

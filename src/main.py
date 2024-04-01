@@ -7,8 +7,7 @@ from auth.router import fastapi_users, auth_backend
 from auth.schemas import UserRead, UserCreate, UserUpdate
 from database import engine
 from auth.config import SECRET_KEY
-from api.products import router as products_router
-from api.reviews import router as review_router
+from api.routers import all_routers
 
 authentication_backend = AdminAuth(secret_key=SECRET_KEY)
 
@@ -41,11 +40,8 @@ app.include_router(
     tags=["users"],
 )
 # END AUTH ROUTES
-
-# ROUTES
-app.include_router(products_router, prefix="/api", tags=["products"])
-app.include_router(review_router, prefix="/api", tags=["reviews"])
-# END ROUTES
+for router in all_routers:
+    app.include_router(router, prefix="/api")
 
 
 # ADMIN

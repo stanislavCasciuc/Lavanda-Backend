@@ -1,20 +1,19 @@
-from utils.repository import AbstractRepository
+from sqlalchemy.orm import selectinload, joinedload
+
+from models.products import ProductOrm
+from schemas.products import GetProductSchema
+from utils.unit_of_work import IUnitOfWork
 
 
 class ProductsService:
-    def __init__(self, product_repository: AbstractRepository):
-        self.product_repository: AbstractRepository = product_repository()
-
-    async def update_product(self, product_id: int, product_data: dict) -> int:
-        product_id = await self.product_repository.update_one_by_id(
-            id=product_id, data=product_data
-        )
-        return product_id
-
-    async def update_product_rating(
-        self, uow, product_id: int, product_data: dict
-    ) -> int:
-        product_id = await self.product_repository.update_one_by_id(
-            id=product_id, data=product_data
-        )
-        return product_id
+    async def find_products(self, uow: IUnitOfWork) -> list:
+        async with uow:
+            products = await uow.products.find_all(
+                options=[selectinload(ProductOrm.category)],
+            )
+        print(products[0].id)
+        result = [
+            GetProductSchema.model_validate(product, from_attributes=True)
+            for product in products
+        ]
+        return result
