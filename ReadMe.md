@@ -26,7 +26,7 @@ CREATE DATABASE lavanda_din_livezi;
 ```
 2. Write .env file with the following content:
 ```
-DATABASE_URL=postgresql://username:password@localhost/lavanda_din_livezi
+DATABASE_URL=postgresql+asyncpg://username:password@localhost/lavanda_din_livezi
 ```
 3. Run the database migrations:
 ```
@@ -39,7 +39,7 @@ uvicorn main:app --reload
 ```
 2. Access the API documentation at `http://localhost:8000/docs` to explore available endpoints and interact with the application.
 
-3. Access admin panel at `http://localhost:8000/admin/login` to manage tasks and categories.
+3. Access admin panel at `http://localhost:8000/admin/login` to manage products and categories.
 
 ## API Endpoints
 You can see the API documentation at `http://localhost:8000/docs` to explore available endpoints and interact with the application.
