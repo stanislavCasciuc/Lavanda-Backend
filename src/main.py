@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from sqladmin import Admin
+from starlette.middleware.cors import CORSMiddleware
 
 from admin.auth import AdminAuth
 from admin.model_views import UserAdmin, ProductAdmin, CategoryAdmin, ReviewAdmin
@@ -43,6 +44,13 @@ app.include_router(
 for router in all_routers:
     app.include_router(router, prefix="/api")
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # ADMIN
 admin.add_view(UserAdmin)
