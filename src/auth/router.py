@@ -1,7 +1,6 @@
 import uuid
 from typing import Optional
-
-from fastapi import Depends, Request
+from fastapi import Depends, Request, BackgroundTasks
 from fastapi_users import BaseUserManager, FastAPIUsers, UUIDIDMixin
 from fastapi_users.authentication import (
     AuthenticationBackend,
@@ -9,10 +8,10 @@ from fastapi_users.authentication import (
     JWTStrategy,
 )
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
-
 from auth.config import SECRET_KEY
 from auth.utils import get_user_db
 from models.users import User
+from sevices.email import EmailService
 
 SECRET = SECRET_KEY
 
@@ -20,6 +19,12 @@ SECRET = SECRET_KEY
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     reset_password_token_secret = SECRET
     verification_token_secret = SECRET
+
+    def __init__(
+        self, user_db: SQLAlchemyUserDatabase, background_tasks: BackgroundTasks
+    ):
+        super().__init__(user_db)
+        self.background_tasks = background_tasks
 
     async def on_after_register(self, user: User, request: Optional[Request] = None):
         print(f"User {user.id} has registered.")
@@ -30,13 +35,25 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         print(f"User {user.id} has forgot their password. Reset token: {token}")
 
     async def on_after_request_verify(
-        self, user: User, token: str, request: Optional[Request] = None
+        self,
+        user: User,
+        token: str,
+        request: Optional[Request] = None,
     ):
         print(f"Verification requested for user {user.id}. Verification token: {token}")
 
+        email_service = EmailService(user=user, token=token)
+        template = email_service.get_email_template_verification()
+        email_service.send_email_background(
+            email=template, background_tasks=self.background_tasks
+        )
+        return {"message": "Email sent"}
 
-async def get_user_manager(user_db: SQLAlchemyUserDatabase = Depends(get_user_db)):
-    yield UserManager(user_db)
+
+async def get_user_manager(
+    background_tasks: BackgroundTasks, user_db=Depends(get_user_db)
+):
+    yield UserManager(user_db, background_tasks)
 
 
 bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")

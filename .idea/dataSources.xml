@@ -8,7 +8,7 @@
       <jdbc-url>jdbc:postgresql://localhost:5432/lavanda</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="lavanda@dpg-co23ie4f7o1s739r3f9g-a.frankfurt-postgres.render.com" uuid="3f8de471-d8b3-4e62-b859-2763439dc6ca">
+    <data-source source="LOCAL" name="lavanda@dpg-co23ie4f7o1s739r3f9g-a.frankfurt-postgres.render.com" uuid="021eeafa-4f23-42a6-9219-1c6eb08f8fe0">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
