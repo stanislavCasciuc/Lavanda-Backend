@@ -1,19 +1,36 @@
 from datetime import datetime
 
+from fastapi import UploadFile
 from pydantic import BaseModel, Field
 
 
-class GetCategorySchema(BaseModel):
-    name: str
+class ImageSchema(BaseModel):
     id: int
+    path: str
+
+
+class PostCategorySchema(BaseModel):
+    name: str
+    image: UploadFile
+
+
+class GetCategorySchema(PostCategorySchema):
+    id: int
+    image: ImageSchema
+    products_count: int
+
+
+class CategoryRead(BaseModel):
+    id: int
+    name: str
 
 
 class GetProductSchema(BaseModel):
     id: int
     name: str
     description: str
-    image: str
-    category: GetCategorySchema
+    image: ImageSchema
+    category: CategoryRead
     price: float = Field(gt=0)
     stock: int = Field(ge=0)
     created_at: datetime

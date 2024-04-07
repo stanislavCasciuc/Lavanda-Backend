@@ -3,7 +3,14 @@ from sqladmin import Admin
 from starlette.middleware.cors import CORSMiddleware
 
 from admin.auth import AdminAuth
-from admin.model_views import UserAdmin, ProductAdmin, CategoryAdmin, ReviewAdmin
+
+from admin.model_views import (
+    UserAdmin,
+    ProductAdmin,
+    CategoryAdmin,
+    ReviewAdmin,
+    ImageAdmin,
+)
 from auth.router import fastapi_users, auth_backend
 from auth.schemas import UserRead, UserCreate, UserUpdate
 from database import engine
@@ -57,4 +64,5 @@ admin.add_view(UserAdmin)
 admin.add_view(ProductAdmin)
 admin.add_view(CategoryAdmin)
 admin.add_view(ReviewAdmin)
+admin.add_view(ImageAdmin)
 # END ADMIN

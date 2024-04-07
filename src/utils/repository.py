@@ -45,8 +45,11 @@ class SQLAlchemyRepository(AbstractRepository):
         result = await self.session.execute(stmt)
         return result.scalars().all()
 
-    async def find_one(self, **filter):
+    async def find_one(self, options: list = None, filter=None):
         stmt = select(self.model).filter_by(**filter)
+        if options is not None:
+            for entity in options:
+                stmt = stmt.options(entity)
         result = await self.session.execute(stmt)
         return result.scalar_one()
 

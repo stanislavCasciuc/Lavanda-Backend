@@ -1,5 +1,8 @@
+from markupsafe import Markup
 from sqladmin import ModelView
 
+
+from models.images import ImageOrm
 from models.reviews import ReviewOrm
 from models.users import User
 from models.products import ProductOrm, CategoryOrm
@@ -90,3 +93,16 @@ class ReviewAdmin(ModelView, model=ReviewOrm):
     name = "Review"
     name_plural = "Reviews"
     icon = "fas fa-star"
+
+
+class ImageAdmin(ModelView, model=ImageOrm):
+    column_list = [ImageOrm.id, ImageOrm.path]
+    column_details_list = [ImageOrm.id, ImageOrm.path]
+    form_excluded_columns = [ImageOrm.id]
+    can_create = True
+    can_edit = True
+    can_delete = True
+    can_view_details = True
+    name = "Image"
+    name_plural = "Images"
+    icon = "fas fa-image"

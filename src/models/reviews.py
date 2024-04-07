@@ -22,3 +22,14 @@ class ReviewOrm(Base):
     user: Mapped["User"] = relationship()
 
     product: Mapped["ProductOrm"] = relationship()
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "product_id": self.product_id,
+            "rating": self.rating,
+            "comment": self.comment,
+            "name": self.name,
+            "user_id": self.user_id,
+            "created_at": self.created_at,
+        }

@@ -1,13 +1,11 @@
 from datetime import datetime
 from typing import Optional, List
 
-
-from fastapi_storages.integrations.sqlalchemy import FileType
 from sqlalchemy import text, Column, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from config import category_img_storage, product_img_storage
 from database import Base
+from models.images import ImageOrm
 
 
 class CategoryOrm(Base):
@@ -15,12 +13,28 @@ class CategoryOrm(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(nullable=False, unique=True)
-    image = Column(FileType(storage=category_img_storage))
+    image_id = Column(Integer, ForeignKey("image.id", ondelete="SET NULL"))
 
     products: Mapped[List["ProductOrm"]] = relationship(back_populates="category")
 
-    # def __str__(self):
-    #     return f"{self.name}"
+    image: Mapped[ImageOrm] = relationship()
+
+    def __str__(self):
+        return f"{self.name}"
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "image": self.image.to_dict(),
+            "products_count": len(self.products) if self.products else 0,
+        }
+
+    def to_read(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+        }
 
 
 class ProductOrm(Base):
@@ -29,8 +43,8 @@ class ProductOrm(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
     description: Mapped[str]
-    image = Column(FileType(storage=product_img_storage))
     category_id = Column(Integer, ForeignKey("category.id", ondelete="SET NULL"))
+    image_id = Column(Integer, ForeignKey("image.id", ondelete="SET NULL"))
     price: Mapped[float]
     stock: Mapped[int]
     created_at: Mapped[datetime | None] = mapped_column(
@@ -44,5 +58,22 @@ class ProductOrm(Base):
 
     category: Mapped["CategoryOrm"] = relationship(back_populates="products")
 
-    # def __str__(self):
-    #     return f"{self.name}"
+    image: Mapped[ImageOrm] = relationship()
+
+    def __str__(self):
+        return f"{self.name}"
+
+    def to_read(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "image": self.image.to_dict(),
+            "category": self.category.to_read(),
+            "price": self.price,
+            "stock": self.stock,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+            "rating": self.rating,
+            "rating_count": self.rating_count,
+        }

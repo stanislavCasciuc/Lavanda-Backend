@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 from typing import Type
 
 from database import async_session_maker
+from repositories.categories import CategoriesRepository
+from repositories.images import ImagesRepository
 from repositories.products import ProductsRepository
 from repositories.reviews import ReviewsRepository
 
@@ -9,6 +11,8 @@ from repositories.reviews import ReviewsRepository
 class IUnitOfWork(ABC):
     reviews: Type[ReviewsRepository]
     products: Type[ProductsRepository]
+    images: Type[ImagesRepository]
+    categories: Type[CategoriesRepository]
 
     @abstractmethod
     def __init__(self): ...
@@ -35,6 +39,8 @@ class UnitOfWork:
 
         self.reviews = ReviewsRepository(self.session)
         self.products = ProductsRepository(self.session)
+        self.images = ImagesRepository(self.session)
+        self.categories = CategoriesRepository(self.session)
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         if exc_val:

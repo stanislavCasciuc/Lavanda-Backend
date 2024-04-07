@@ -14,6 +14,7 @@ from models.products import ProductOrm
 from models.reviews import ReviewOrm
 from models.users import User
 from models.products import CategoryOrm
+from models.images import ImageOrm
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
